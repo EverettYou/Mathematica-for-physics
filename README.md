@@ -6,21 +6,21 @@ This repository contains *Mathematica* packages and stylesheets that are useful 
 
 - Packages
 
-  - PauliAlgebra: symbolic handeling the algebra and representation of Pauli operators
+  - **PauliAlgebra**: symbolic handeling the algebra and representation of Pauli operators
   
-  - LoopIntegrate: performing loop integration in quantum field theory (with dimension regularization)
+  - **LoopIntegrate**: performing loop integration in quantum field theory (with dimension regularization)
   
-  - MatsubaraSum: performing Matsubara summation analytically
+  - **MatsubaraSum**: performing Matsubara summation analytically
   
-  - DiagramEditor: an interactive editor of Feynmann diagrams (no diagramatic evaluation)
+  - **DiagramEditor**: an interactive editor of Feynmann diagrams (no diagramatic evaluation)
   
-  - Themes: a self-made plot theme for Mathematica, called "Academic" (see the StackExchange discussion [Is it possible to define a new PlotTheme?](https://mathematica.stackexchange.com/questions/54545/is-it-possible-to-define-a-new-plottheme))
+  - **Themes**: a self-made plot theme for Mathematica, called "Academic" (see the StackExchange discussion [Is it possible to define a new PlotTheme?](https://mathematica.stackexchange.com/questions/54545/is-it-possible-to-define-a-new-plottheme))
   
-  - Toolkit: miscellaneous functions, including BZPlot for plotting band structure, tTr for tensor network contraction, ComplexMatrixPlot for complex matrix visualization, Pf for matrix Pfaffian
+  - **Toolkit**: miscellaneous functions, including `BZPlot` for plotting band structure, `tTr` for tensor network contraction, `ComplexMatrixPlot` for complex matrix visualization, `Pf` for matrix Pfaffian
   
 - Stylesheets
 
-  - CMU Article: a Mathematica style sheet based on Computer Mordern Unicode fonts (the fonts need to be installed separated to the operating system, and the font files can be found in [./CMUfonts](https://github.com/EverettYou/Mathematica-for-physics/tree/master/CMUfonts))
+  - **CMU Article**: a Mathematica style sheet based on Computer Mordern Unicode fonts (the fonts need to be installed separated to the operating system, and the font files can be found in [./CMUfonts](https://github.com/EverettYou/Mathematica-for-physics/tree/master/CMUfonts))
   
 - FrontEnd Configuration
 
