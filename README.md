@@ -12,7 +12,7 @@ This repository contains *Mathematica* packages and stylesheets that are useful 
   
   - **MatsubaraSum**: performing Matsubara summation analytically
   
-  - **DiagramEditor**: an interactive editor of Feynmann diagrams (no diagramatic evaluation)
+  - **DiagramEditor**: an interactive editor of Feynman diagrams (no diagramatic evaluation)
   
   - **Themes**: a self-made plot theme for Mathematica, called "Academic" (see the StackExchange discussion [Is it possible to define a new PlotTheme?](https://mathematica.stackexchange.com/questions/54545/is-it-possible-to-define-a-new-plottheme))
   
