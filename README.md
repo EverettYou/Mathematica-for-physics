@@ -32,7 +32,7 @@ For more details, please visit ...
 
   1. unzip this repository in a folder,
 
-  2. open `install.m` in Mathematica,
+  2. open `config.m` in Mathematica,
 
   3. click the `Run Package` button to the top right,
 
