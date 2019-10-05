@@ -2,8 +2,8 @@
 
 (* Mathematica Package *)
 (* Author: Everett You *)
-(* Created by the Code Collector at Sun 3 Dec 2017 20:29:55 *)
-(* from file: /Users/everett/Dropbox/Mathematica/Projects/PauliAlgebra/developer.nb *)
+(* Created by the Code Collector at Sat 5 Oct 2019 11:04:14 *)
+(* from file: /Users/everettyou/Dropbox/Mathematica/Projects/PauliAlgebra/developer.nb *)
 (* ===== Begin ===== *)
 BeginPackage["PauliAlgebra`"];
 \[Sigma]::usage="\[Sigma][\!\(TI\`i\_1\),\!\(TI\`i\_2\),\[Ellipsis]] denotes \!\(TI\`\[Sigma]\^\(i\_1,i\_2,\[Ellipsis]\)\).";
@@ -259,7 +259,7 @@ invSimplify[expr_]:=Collect[Numerator[#],_\[Sigma],Factor]/Simplify[Denominator[
 aTogether[expr_]:=expr//.{a_/d_+b_/d_:>(a+b)/d,a_/c_+b_/d_:>With[{lcm=PolynomialLCM[c,d]},(a Cancel[lcm/c]+b Cancel[lcm/d])/lcm]};
 
 (* ----- \[Sigma]Power and \[Sigma]Sqrt ----- *)
-me:\[Sigma]Power[A:_?\[Sigma]PolynomialQ,n_Integer]:=Check[Which[n==0,\[Sigma]0[A],n>0,nPower[A,n],n<0,nPower[Inverse[A],Abs[n]]],HoldForm[me]];
+me:\[Sigma]Power[A:_?\[Sigma]PolynomialQ,n_Integer]:=Check[Which[n==0,\[Sigma]0[A],n>0,nPower[A,n],n<0,nPower[\[Sigma]Inverse[A],Abs[n]]],HoldForm[me]];
 me:\[Sigma]Power[A:_?\[Sigma]PolynomialQ,n_?NumericQ]:=Check[xPower[A,n],HoldForm[me]];
 me:\[Sigma]Sqrt[A:Except[_List|_SparseArray|_StructuredArray]?\[Sigma]PolynomialQ]:=xPower[A,1/2];
 (* [ Kernel (Integer Power) ] *)

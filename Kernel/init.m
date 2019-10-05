@@ -1,9 +1,10 @@
 (* ::Package:: *)
 
+(* ::Code::Initialization:: *)
 (** User Mathematica initialization file **)
-Get["PauliAlgebra`"];
-(*Needs["LoopIntegrate`"];*)
+Needs["PauliAlgebra`"];
+Needs["LoopIntegrate`"];
+Needs["MatsubaraSum`"];
 Needs["DiagramEditor`"]; 
 Needs["Toolkit`"];
-Needs["Pfaffian`"];
 Needs["Themes`"];
