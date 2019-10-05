@@ -6,7 +6,7 @@ This repository contains *Mathematica* packages and stylesheets that are useful 
 
 - Packages
 
-  - **PauliAlgebra**: symbolic handeling the algebra and representation of Pauli operators
+  - **PauliAlgebra**: symbolic handling the algebra and representation of Pauli operators
   
   - **LoopIntegrate**: performing loop integration in quantum field theory (with dimension regularization)
   
@@ -20,7 +20,7 @@ This repository contains *Mathematica* packages and stylesheets that are useful 
   
 - Stylesheets
 
-  - **CMU Article**: a Mathematica style sheet based on Computer Mordern Unicode fonts (the fonts need to be installed separately to the operating system, and the font files can be found in [./CMUfonts](https://github.com/EverettYou/Mathematica-for-physics/tree/master/CMUfonts))
+  - **CMU Article**: a Mathematica style sheet based on Computer Modern Unicode fonts (the fonts need to be installed separately to the operating system, and the font files can be found in [./CMUfonts](https://github.com/EverettYou/Mathematica-for-physics/tree/master/CMUfonts))
   
 - FrontEnd Configuration
 
