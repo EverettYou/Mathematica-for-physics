@@ -24,7 +24,7 @@ This repository contains *Mathematica* packages and stylesheets that are useful 
   
 - FrontEnd Configuration
 
-For more details, please visit ...
+For more details, please read the **User's Guide** ([Mathematica](https://everettyou.github.io/teaching/Mathematica/Guide.nb)) ([PDF](https://everettyou.github.io/teaching/Mathematica/Guide.pdf))
 
 ## Installation 
 
