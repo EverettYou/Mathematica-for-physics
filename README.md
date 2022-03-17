@@ -20,7 +20,7 @@ This repository contains *Mathematica* packages and stylesheets that are useful 
   
 - Stylesheets
 
-  - **CMU Article**: a Mathematica style sheet based on Computer Modern Unicode fonts (the fonts need to be installed separately to the operating system, and the font files can be found in [./CMUfonts](https://github.com/EverettYou/Mathematica-for-physics/tree/master/CMUfonts))
+  - **CMU Article**: a Mathematica style sheet based on Computer Modern Unicode (i.e. LaTeX default) fonts (the fonts need to be installed separately to the operating system, and the font files can be found in [./CMUfonts](https://github.com/EverettYou/Mathematica-for-physics/tree/master/CMUfonts))
   
 - FrontEnd Configuration
 
