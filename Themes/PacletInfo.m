@@ -2,16 +2,14 @@
 
 (* Paclet Info File *)
 
-(* created 2016/05/28*)
+(* created 2024/01/12*)
 
 Paclet[
     Name -> "Themes",
-    Version -> "0.0.1",
+    Version -> "0.0.2",
     MathematicaVersion -> "10+",
     Extensions -> 
         {
             {"Documentation", Language -> "English"}
         }
 ]
-
-
