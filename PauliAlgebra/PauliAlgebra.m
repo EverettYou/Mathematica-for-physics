@@ -2,8 +2,8 @@
 
 (* Mathematica Package *)
 (* Author: Everett You *)
-(* Created by the Code Collector at Sat 5 Oct 2019 11:04:14 *)
-(* from file: /Users/everettyou/Dropbox/Mathematica/Projects/PauliAlgebra/developer.nb *)
+(* Created by the Code Collector at Sat 6 Apr 2024 11:53:31 *)
+(* from file: /Users/home/Library/CloudStorage/Dropbox/Mathematica/Projects/PauliAlgebra/developer.nb *)
 (* ===== Begin ===== *)
 BeginPackage["PauliAlgebra`"];
 \[Sigma]::usage="\[Sigma][\!\(TI\`i\_1\),\!\(TI\`i\_2\),\[Ellipsis]] denotes \!\(TI\`\[Sigma]\^\(i\_1,i\_2,\[Ellipsis]\)\).";
@@ -96,7 +96,7 @@ Cl[0,8]:={\[Sigma][0,0,2,1],\[Sigma][0,0,2,3],\[Sigma][0,2,1,0],\[Sigma][0,2,3,0
 Cl[0,n_]/;n>8:=With[{\[Sigma]s=Cl[0,n-8]},Join[\[Sigma]0[\[Sigma]s]\[CircleTimes]#&/@Cl[0,8],#\[CircleTimes]\[Sigma][2,2,2,2]&/@\[Sigma]s]];
 Cl[1,0]:={\[Sigma][3]};
 Cl[n_,0]/;n>=2:=With[{\[Sigma]s=Cl[0,n-2]},Join[\[Sigma][2]\[CircleTimes]#&/@\[Sigma]s,{\[Sigma][1]\[CircleTimes]#,\[Sigma][3]\[CircleTimes]#}&@\[Sigma]0[\[Sigma]s]]];
-Cl[p_,q_]/;p>0&&q>0:=With[{\[Sigma]s=Cl[p-1,q-1]},SortBy[Join[\[Sigma][3]\[CircleTimes]#&/@\[Sigma]s,{\[Sigma][1]\[CircleTimes]#,\[Sigma][2]\[CircleTimes]#}&@\[Sigma]0[\[Sigma]s]],OddQ@Count[#,2]&]]
+Cl[p_,q_]/;p>0&&q>0:=With[{\[Sigma]s=Cl[p-1,q-1]},SortBy[Join[\[Sigma][3]\[CircleTimes]#&/@\[Sigma]s,{\[Sigma][1]\[CircleTimes]#,\[Sigma][2]\[CircleTimes]#}&@\[Sigma]0[\[Sigma]s]],OddQ@Count[#,2]&]];
 Cl[n_]:=Block[{bit},bit=Ceiling[n/2];
 Take[\[Sigma]@@PadRight[Append[ConstantArray[3,#1-1],#2],bit]&@@@Tuples[{Range[bit],{1,2}}],n]];
 (* [ Lie Algebra ] *)
@@ -108,18 +108,18 @@ Fold[add,{},xs]];
 
 (* ----- Quantum Gates ----- *)
 (* Hadamard gate *)
-Hadamard[P_]:=Sum[parse[P][i],{i,{1,3}}]/Sqrt[2];
+Hadamard[P_]:=Block[{n,ctr,A},n=Length[P];
+ctr=Flatten@Position[P,_Blank];
+CenterDot@@Table[Sum[\[Sigma]@@SparseArray[{i->a},n],{a,{1,3}}]/Sqrt[2],{i,ctr}]];
 (* Swap gate *)
-Swap[P_]:=Sum[parse[P][i,i],{i,Range[0,3]}]/2;
+Swap[P_\[Sigma]]:=Block[{n,ctr,A},n=Length[P];
+ctr=Flatten@Position[P,_Blank];
+CenterDot@@Table[Sum[\[Sigma]@@SparseArray[#->a&/@ij,n],{a,0,3}]/2,{ij,Thread@Through[{Most,Rest}[ctr]]}]];
 (* Controlled gate *)
-Controlled[P_]:=Sum[parse0[P][i]+(-1)^i parse[P][i],{i,{0,3}}]/2;
-Controlled[A_,B_]:=(\[Sigma]0[A]+A+B-A\[CenterDot]B)/2;
-(* [ Parsing \[Sigma]Pattern ] *)
-(* parse converts polynomials of \[Sigma]Pattern,and parse0 cover the uncontrolled bits by 0. *)
-parse[P_]:=Function@Evaluate[P/.s_\[Sigma]:>plugslot[s]];
-parse0[P_]:=Function@Evaluate[First@Cases[P,s_\[Sigma]:>plugslot[Replace[s,_Integer->0,1]],{0,\[Infinity]}]];
-(* Convert \[Sigma]Pattern into function with Slots arranged in order *)
-plugslot[s_\[Sigma]]:=ReplacePart[s,MapIndexed[#1->Slot@@#2&,Flatten@Position[s,_Blank]]];
+Controlled[P_\[Sigma]]:=Block[{n,ctr,A},n=Length[P];
+ctr=Flatten@Position[P,_Blank];
+A=ReplacePart[P,#->0&/@ctr];
+Factor[\[Sigma]0[n]+CenterDot@@Append[Table[(\[Sigma]0[n]-\[Sigma]@@SparseArray[{i->3},n])/2,{i,ctr}],A-\[Sigma]0[n]]]];
 
 (* ===== Algebraic System ===== *)
 
@@ -132,7 +132,7 @@ CircleTimes[A___,\[Sigma][a___],\[Sigma][b___],B___]:=CircleTimes[A,\[Sigma][a,b
 CircleTimes[A___,x_?\[Sigma]FreeQ,B___]:=x CircleTimes[A,B];
 (* [ Algebraic Properties ] *)
 (* Pull out factors *)
-CircleTimes[A___,B_Times,C___]:=Times@@Lookup[#,False,{}] CircleTimes[A,Times@@Lookup[#,True,{}],C]&@GroupBy[List@@B,\[Sigma]PolynomialQ];
+CircleTimes[A___,B_Times,C___]:=Times@@Lookup[#,False,{}]  CircleTimes[A,Times@@Lookup[#,True,{}],C]&@GroupBy[List@@B,\[Sigma]PolynomialQ];
 CircleTimes[___,0,___]:=0;
 (* Distribute over plus *)
 me:CircleTimes[___,_Plus,___]:=Distribute[Unevaluated[me],Plus];
@@ -157,7 +157,7 @@ IndexProduct[1,3]:=(Sow[-I];2);
 IndexProduct[i_,j_,k__]:=IndexProduct[IndexProduct[i,j],k]
 (* [ Algebraic Properties ] *)
 (* Pull out factors *)
-CenterDot[A___,B_Times,C___]:=Times@@Lookup[#,False,{}] CenterDot[A,Times@@Lookup[#,True,{}],C]&@GroupBy[List@@B,\[Sigma]PolynomialQ];
+CenterDot[A___,B_Times,C___]:=Times@@Lookup[#,False,{}]  CenterDot[A,Times@@Lookup[#,True,{}],C]&@GroupBy[List@@B,\[Sigma]PolynomialQ];
 (* Distribute over plus *)
 me:CenterDot[___,_Plus,___]:=Distribute[Unevaluated[me],Plus];
 
@@ -174,13 +174,13 @@ AnticommuteQ[B_]:=AnticommuteQ[#,B]&;
 (* ----- Symmetry Properties ----- *)
 (* [ Conjugate and Transpose ] *)
 (* Define \[Sigma] *)
-\[Sigma]Transpose[A_]:=A/.\[Sigma][a___]:>(-1)^Count[{a},2] \[Sigma][a];
+\[Sigma]Transpose[A_]:=A/. \[Sigma][a___]:>(-1)^Count[{a},2] \[Sigma][a];
 \[Sigma]Conjugate[A_+B_]:=\[Sigma]Conjugate[A]+\[Sigma]Conjugate[B];
 \[Sigma]Hermitian[A_+B_]:=\[Sigma]Hermitian[A]+\[Sigma]Hermitian[B];
 \[Sigma]Conjugate[A_ B_]:=\[Sigma]Conjugate[A] \[Sigma]Conjugate[B];
 \[Sigma]Hermitian[A_ B_]:=\[Sigma]Hermitian[A] \[Sigma]Hermitian[B];
-\[Sigma]Conjugate[A_]:=Conjugate[A]/.Conjugate[\[Sigma][a___]]:>(-1)^Count[{a},2] \[Sigma][a];
-\[Sigma]Hermitian[A_]:=Conjugate[A]/.Conjugate[\[Sigma][a___]]:>\[Sigma][a];
+\[Sigma]Conjugate[A_]:=Conjugate[A]/. Conjugate[\[Sigma][a___]]:>(-1)^Count[{a},2] \[Sigma][a];
+\[Sigma]Hermitian[A_]:=Conjugate[A]/. Conjugate[\[Sigma][a___]]:>\[Sigma][a];
 (* [ SymmetricQ and AntisymmetricQ ] *)
 (* fast algorithm for \[Sigma]-monomial *)
 SymmetricQ[\[Sigma][a___]]:=EvenQ[Count[{a},2]];
@@ -196,7 +196,7 @@ h:\[Sigma]Select[crits_List]:=With[{n=xQubit[crits]},If[n\[Element]Integers,\[Si
 \[Sigma]Select[crit_,x___]:=\[Sigma]Select[{crit},x];
 
 (* ----- Transformations ----- *)
-(* {{Orthogonal:,A\[Rule]O\[Transpose] A O},{Unitary:,A\[Rule]SuperDagger[O] A O},{Conjugate:,A\[Rule]O^-1 A O}} *)
+(* {{Orthogonal:,A->O\[Transpose] A O},{Unitary:,A->SuperDagger[O] A O},{Conjugate:,A->O^-1 A O}} *)
 OrthogonalTransform[Os___]:=Fold[Collect[\[Sigma]Transpose[#2]\[CenterDot]#1\[CenterDot]#2,_\[Sigma],Simplify]&,#,{Os}]&;
 UnitaryTransform[Os___]:=Fold[Collect[\[Sigma]Hermitian[#2]\[CenterDot]#1\[CenterDot]#2,_\[Sigma],Simplify]&,#,{Os}]&;
 ConjugateTransform[Os___]:=Fold[Collect[\[Sigma]Inverse[#2]\[CenterDot]#1\[CenterDot]#2,_\[Sigma],Simplify]&,#,{Os}]&;
@@ -208,7 +208,7 @@ ConjugateTransform[Os___]:=Fold[Collect[\[Sigma]Inverse[#2]\[CenterDot]#1\[Cente
 Represent[\[Sigma][]]=1;
 Represent[\[Sigma][i_]]:=SparseArray[ArrayRules[PauliMatrix[i]]];
 Represent[\[Sigma][a__]]:=KroneckerProduct@@(Represent[\[Sigma][#]]&/@{a});
-Represent[expr_]:=expr/.s_\[Sigma]:>Represent[s];
+Represent[expr_]:=expr/. s_\[Sigma]:>Represent[s];
 
 (* ----- Abstract ----- *)
 (* Give \[Sigma]-polynominal representation of matrix *)
@@ -238,7 +238,7 @@ Amat=SparseArray[Flatten[Last[Reap[While[i<=n&&i<=4^xQubit[A],Sow[Arule[i++]]]]]
 (* ----- \[Sigma]Tr ----- *)
 \[Sigma]Tr[0]:=0;
 \[Sigma]Tr[A:_?\[Sigma]PolynomialQ]:=2^xQubit[A] nTr[A];
-nTr[A_]:=A/.{\[Sigma]0[A]->1,_\[Sigma]->0};
+nTr[A_]:=A/. {\[Sigma]0[A]->1,_\[Sigma]->0};
 
 (* ----- \[Sigma]Det ----- *)
 \[Sigma]Det[A:_?\[Sigma]PolynomialQ]:=xDet[A];
@@ -254,7 +254,7 @@ HoldForm[me]];
 (* [ Kernel ] *)
 xInverse[A_]:=Block[{Amat,\[Sigma]s,sol,singular=False},{Amat,\[Sigma]s}=xActionSpace[A];
 sol=Check[LinearSolve[Amat,nTr[\[Sigma]s]],singular=True];
-If[!singular,invSimplify[sol.\[Sigma]s]]];
+If[!singular,invSimplify[sol . \[Sigma]s]]];
 invSimplify[expr_]:=Collect[Numerator[#],_\[Sigma],Factor]/Simplify[Denominator[#]]&@aTogether[expr];
 aTogether[expr_]:=expr//.{a_/d_+b_/d_:>(a+b)/d,a_/c_+b_/d_:>With[{lcm=PolynomialLCM[c,d]},(a Cancel[lcm/c]+b Cancel[lcm/d])/lcm]};
 
@@ -272,19 +272,19 @@ nPower[A_,1]:=A;
 nPower[A_,2]:=Collect[A\[CenterDot]A,_\[Sigma]];
 (* [ Kernel (General Power) ] *)
 xPower[A_,x_]:=Block[{Amat,\[Sigma]s},{Amat,\[Sigma]s}=xActionSpace[A];
-MatrixPower[Amat,x,nTr[\[Sigma]s]].\[Sigma]s]
+MatrixPower[Amat,x,nTr[\[Sigma]s]] . \[Sigma]s]
 
 (* ----- \[Sigma]Exp ----- *)
 me:\[Sigma]Exp[A:_?\[Sigma]PolynomialQ]:=xExp[A];
 (* [ Kernel ] *)
 xExp[A_]:=Block[{Amat,\[Sigma]s},{Amat,\[Sigma]s}=xActionSpace[A];
-MatrixExp[Amat,nTr[\[Sigma]s]].\[Sigma]s]
+MatrixExp[Amat,nTr[\[Sigma]s]] . \[Sigma]s]
 
 (* ----- \[Sigma]Log ----- *)
 me:\[Sigma]Log[A:_?\[Sigma]PolynomialQ]:=xLog[A];
 (* [ Kernel ] *)
 xLog[A_]:=Block[{Amat,\[Sigma]s},{Amat,\[Sigma]s}=xActionSpace[A];
-\[Sigma]s.MatrixLog[Amat].nTr[\[Sigma]s]]
+\[Sigma]s . MatrixLog[Amat] . nTr[\[Sigma]s]]
 
 (* ===== End ===== *)
 End[];
